@@ -1,0 +1,54 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Anime Impact Simulator Autofarm", "DarkTheme")
+local Tab = Window:NewTab("Autofarm")
+local Section = Tab:NewSection("Autofarm")
+
+
+Section:NewToggle("Auto Click", "Clicks for you", function(state)
+    if state then
+        _G.AutoClicking = true
+        while _G.AutoClicking == true do
+            game:GetService("ReplicatedStorage").Remotes.TappingEvent:FireServer()
+            wait(0.1)
+        end
+    else
+        _G.AutoClicking = false
+    end
+end)
+
+
+Section:NewDropdown("Select Exchange Offer", "Dropdown to select the exchange offer", {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26}, function(exchangeValue)
+    currentOffer = exchangeValue
+end)
+Section:NewToggle("Auto Exchange", "Automatically Exchanges", function(state)
+    if state then
+        _G.AutoExchanging = true
+        while _G.AutoExchanging == true do
+            local args = {
+                [1] = "Exchange",
+                [2] = currentOffer
+            }
+            game:GetService("ReplicatedStorage").Remotes.ClientRemote:InvokeServer(unpack(args))
+            wait(0.5)
+        end
+    else
+        _G.AutoExchanging = false
+    end
+end)
+
+
+Section:NewLabel("Character Cards")
+Section:NewDropdown("Select Card", "Dropdown to select the card to purchase", {"PIRATE", "SOUL", "SHURIKEN", "SLAYER", "DRAGON", "JUJUTSU", "S", "S-SECRET", "BIZARRE"}, function(value)
+    currentOption = value
+end)
+Section:NewButton("Purchase Card", "Purchases the selected card", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace["_SYSTEM"]["_EGG"][currentOption].EGG.Card.CFrame
+    wait(0.5)
+    local args = {
+        [1] = "CARD",
+        [2] = currentOption,
+        [3] = "1",
+        [4] = {}
+    }
+    game:GetService("ReplicatedStorage").Remotes.ClientRemote:InvokeServer(unpack(args))
+end)
